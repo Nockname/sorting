@@ -1,4 +1,6 @@
 import copy
+
+from numpy import append
 from settings import *
 
 class Sorting:
@@ -28,45 +30,40 @@ class Sorting:
         return inputCopy, workIndex
 
     @staticmethod
-    def insertionSort(inputList, workIndex, BOOKMARK):
+    def insertionSort(inputList, workIndex):
 
         done=False
         changed=[]
 
-        if BOOKMARK==-1:
+        if workIndex[1]==-1:
             done=True
-            return inputList, workIndex, BOOKMARK, done, changed
+            return inputList, workIndex, done, changed
 
         inputCopy=copy.deepcopy(inputList)
 
-        # print(inputList)
+        if inputList[workIndex[0]]>inputList[workIndex[0]+1]:
 
-        if inputList[workIndex]>inputList[workIndex+1]:
-            # print("SWAP")
+            inputCopy[workIndex[0]]=inputList[workIndex[0]+1]
+            inputCopy[workIndex[0]+1]=inputList[workIndex[0]]
 
-            inputCopy[workIndex]=inputList[workIndex+1]
-            inputCopy[workIndex+1]=inputList[workIndex]
+            changed.extend([workIndex[0], workIndex[0]+1])
 
-            changed.extend([workIndex, workIndex+1])
+            if workIndex[0] < len(inputList) - 2:
 
-            if workIndex < len(inputList) - 2:
-
-                workIndex+=1
+                workIndex[0]+=1
 
             else:
 
-                BOOKMARK-=1
-                workIndex=BOOKMARK
+                workIndex[1]-=1
+                workIndex[0]=workIndex[1]
 
-                if workIndex not in changed:
-                    changed.append(workIndex)
-                
+                if workIndex[0] not in changed:
+                    changed.append(workIndex[0])
 
         else:
-            BOOKMARK-=1
+            workIndex[1] -= 1
 
-            changed.extend([workIndex, BOOKMARK])
+            changed.extend([workIndex[0], workIndex[1]])
+            workIndex[0] = workIndex[1]
 
-            workIndex=BOOKMARK
-
-        return inputCopy, workIndex, BOOKMARK, done, changed
+        return inputCopy, workIndex, done, changed
